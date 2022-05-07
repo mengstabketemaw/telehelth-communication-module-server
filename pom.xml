@@ -14,7 +14,7 @@
 	<name>communication</name>
 	<description>Communication module for telehelth capstone project</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>14</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
