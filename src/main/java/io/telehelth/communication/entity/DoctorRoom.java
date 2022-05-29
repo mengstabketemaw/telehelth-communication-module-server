@@ -17,6 +17,8 @@ public class DoctorRoom {
 
     String username;
 
+    String token;
+
     String type;
 
     String roomId;

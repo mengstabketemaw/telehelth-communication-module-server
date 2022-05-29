@@ -37,7 +37,7 @@ public class Controller {
 
 
     @PostMapping("/create-room")
-    public ResponseEntity<Map<String,Object>> createMeeting(@RequestBody Map<String,String> body){
+    public ResponseEntity<DoctorRoom> createMeeting(@RequestBody Map<String,String> body){
         String username = body.get("username");
         String type = body.get("type"); //consultation,vdt,therapyGroup
         logger.info("creating a a room for doctor username: "+username+", with purpose of: "+type);
@@ -52,9 +52,10 @@ public class Controller {
         DoctorRoom doctorRoom = new DoctorRoom();
         doctorRoom.setUsername(username);
         doctorRoom.setRoomId(response.get("meetingId").toString());
+        doctorRoom.setToken(token);
         doctorRoomRepository.save(doctorRoom);
         logger.info("room has been create with id : "+response.get("meetingId"));
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(doctorRoom);
     }
 
     @GetMapping("/validate-room/{roomId}")
@@ -75,7 +76,7 @@ public class Controller {
         return ResponseEntity.ok(doctorRoomRepository.findByUsername(username).get());
     }
 
-    @GetMapping("/close-room/{username}")
+    @GetMapping("/delete-room/{username}")
     public ResponseEntity<Void> deleteRoom(@PathVariable String username){
         doctorRoomRepository.deleteByUsername(username);
         return ResponseEntity.ok().build();
