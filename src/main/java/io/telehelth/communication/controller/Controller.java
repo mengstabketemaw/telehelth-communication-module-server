@@ -106,6 +106,30 @@ public class Controller {
         return ResponseEntity.ok(therapyGroupRepository.findAllByTherapist(therapist));
     }
 
+    @GetMapping("/therapy-groups/patient/{username}")
+    public ResponseEntity<List<TherapyGroup>> getMyTherapyGroupPatient(@PathVariable String username){
+        //this code is not correctly implemented we shouldn't do it like this instead we should utilize what is given for us for free instead of implementing it from the scratch.
+        List<TherapyGroup> therapyGroupList = therapyGroupRepository.findAll()
+                .stream()
+                .filter(therapyGroup -> {
+                    String[] patients = therapyGroup.getPatients();
+                    return Arrays.stream(patients)
+                            .anyMatch(e->e.equals(username));
+                }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(therapyGroupList);
+    }
+
+    @DeleteMapping("/therapy-groups/{id}/{username}")
+    public ResponseEntity<Void> deleteMyTherapyGroupPatient(@PathVariable long id,@PathVariable String username){
+        TherapyGroup therapyGroup = therapyGroupRepository.findById(id).get();
+        therapyGroup.setPatients(Arrays.stream(therapyGroup.getPatients())
+                .filter(e -> !e.equals(username)).toArray(String[]::new));
+        therapyGroup.setCurrentPatientNumber(therapyGroup.getCurrentPatientNumber()-1);
+        therapyGroupRepository.save(therapyGroup);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/join-therapy-group/{id}/{username}")
     public ResponseEntity<Void> joinTherapyGroup(@PathVariable long id,@PathVariable String username){
         TherapyGroup therapyGroup = therapyGroupRepository.findById(id).get();
