@@ -94,9 +94,8 @@ public class Controller {
     }
 
     @PostMapping("/create-therapy-group")
-    public ResponseEntity<Void> createTherapyGroup(@RequestBody @Valid TherapyGroup therapyGroup){
-        therapyGroupRepository.save(therapyGroup);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TherapyGroup> createTherapyGroup(@RequestBody @Valid TherapyGroup therapyGroup){
+        return ResponseEntity.ok(therapyGroupRepository.save(therapyGroup));
     }
 
     @GetMapping("/therapy-groups")
