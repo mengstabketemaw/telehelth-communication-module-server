@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,9 +45,10 @@ public class Controller {
 
 
     @PostMapping("/create-room")
-    public ResponseEntity<DoctorRoom> createMeeting(@RequestBody Map<String,String> body){
+    @Transactional
+    public ResponseEntity<DoctorRoom> createRoom(@RequestBody Map<String,String> body){
         String username = body.get("username");
-        doctorRoomRepository.deleteByUsername(username);//make sure there only one room per user
+        doctorRoomRepository.deleteByUsername(username);//make sure there is only one room per user
         String type = body.get("type"); //consultation,vdt,therapyGroup
         logger.info("creating a a room for doctor username: "+username+", with purpose of: "+type);
         String token = service.getToken();
@@ -85,6 +87,7 @@ public class Controller {
     }
 
     @GetMapping("/delete-room/{username}")
+    @Transactional
     public ResponseEntity<Void> deleteRoom(@PathVariable String username){
         doctorRoomRepository.deleteByUsername(username);
         return ResponseEntity.ok().build();
@@ -125,7 +128,6 @@ public class Controller {
         TherapyGroup therapyGroup = therapyGroupRepository.findById(id).get();
         therapyGroup.setPatients(Arrays.stream(therapyGroup.getPatients())
                 .filter(e -> !e.equals(username)).toArray(String[]::new));
-        therapyGroup.setCurrentPatientNumber(therapyGroup.getCurrentPatientNumber()-1);
         therapyGroupRepository.save(therapyGroup);
         return ResponseEntity.ok().build();
     }
@@ -140,11 +142,8 @@ public class Controller {
                 ;
         patientList.add(username);
         therapyGroup.setPatients(patientList.toArray(new String[0]));
-        therapyGroup.setCurrentPatientNumber(therapyGroup.getCurrentPatientNumber()+1);
         therapyGroupRepository.save(therapyGroup);
         return ResponseEntity.ok().build();
     }
-
-
 
 }
