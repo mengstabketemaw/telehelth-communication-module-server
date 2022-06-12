@@ -108,7 +108,7 @@ public class OnlineUsersService {
         if(current.containsKey(doctor.getUsername())){
              String username = current.remove(doctor.getUsername());
              VdtUsers patient = onlineUsers.get(username);
-             messagingTemplate.convertAndSendToUser(patient.getUsername(),"/msg","Your doctor has left leave the room");
+             messagingTemplate.convertAndSendToUser(patient.getUsername(),"/msg","{msg:Your doctor has left leave the room}");
              onlineUsers.remove(patient.getUsername());
         }else
             doctors.removeIf(d->d.equals(doctor.getUsername()));
