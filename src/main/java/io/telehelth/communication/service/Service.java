@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @org.springframework.stereotype.Service
 public class Service {
-  private final String API_KEY = "cc11048d-f38d-4c8f-8e97-877c4b2964b1";
-  private final String SECRET_KEY = "b2068b38aa78ac5d10e3e1696f972a6c59d02d48c040faa4d38d672a1c641cf7";
+  private final String API_KEY = "9ec65ad7-b2f2-4f6c-90b2-55a955ae4ef9";
+  private final String SECRET_KEY = "96c81e155e95e5f6aeb8c0f90ade80993d607c16e4cff37ea6202a3b55ac7d70";
 
     private String generateManagementToken() {
         Map<String, Object> payload = new HashMap<>();
