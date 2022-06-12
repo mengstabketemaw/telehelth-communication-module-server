@@ -12,7 +12,7 @@
 	<artifactId>communication</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>communication</name>
-	<description>Communication module for telehelth capstone project</description>
+	<description>Communication module for telehealth capstone project</description>
 	<properties>
 		<java.version>13</java.version>
 	</properties>
