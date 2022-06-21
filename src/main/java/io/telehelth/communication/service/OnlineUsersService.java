@@ -36,7 +36,7 @@ public class OnlineUsersService {
         status.put("current",current.size());
         status.put("patients",patients.size());
         status.put("doctors",doctors.size());
-        status.put("users",onlineUsers.size());
+        status.put("users",onlineUsers.size()+ current.size()*2);
         return status;
     }
 
@@ -156,21 +156,27 @@ public class OnlineUsersService {
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor stompAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = stompAccessor.getSessionId();
-        String username = onlineUsers.entrySet()
-                                        .stream()
-                                        .filter(e->e.getValue().getSessionId().equals(sessionId))
-                                        .findAny()
-                                        .get()
-                                        .getValue()
-                                        .getUsername();
-        VdtUsers user = onlineUsers.remove(username);
+        try {
+            String username = onlineUsers.entrySet()
+                    .stream()
+                    .filter(e->e.getValue().getSessionId().equals(sessionId))
+                    .findAny()
+                    .get()
+                    .getValue()
+                    .getUsername();
+            VdtUsers user = onlineUsers.remove(username);
 
-        if(user.getRole().equals(Role.DOCTOR))
-            doctorLeft(user);
-        else
-            patientLeft(user);
-        sendStatus();
-        logger.info("User has left the room <{}> with sessionId <{}>", user.getUsername(), sessionId);
+            if(user.getRole().equals(Role.DOCTOR))
+                doctorLeft(user);
+            else
+                patientLeft(user);
+            sendStatus();
+            logger.info("User has left the room <{}> with sessionId <{}>", user.getUsername(), sessionId);
+
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
 
     }
 
